@@ -59,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(deleteShortcut, &QShortcut::activated, this, &MainWindow::clearHistory);
     QShortcut *quitShortcut = new QShortcut(QKeySequence(tr("Ctrl+Q", "Quit")), this);
     connect(quitShortcut, &QShortcut::activated, qApp, &QApplication::quit);
+    QShortcut *hideShortcut = new QShortcut(QKeySequence(tr("Escape", "Cancel")), this);
+    connect(hideShortcut, &QShortcut::activated, this, &MainWindow::hide);
 
     createTrayIcon();
 
