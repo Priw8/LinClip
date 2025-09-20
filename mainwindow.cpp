@@ -176,8 +176,13 @@ void MainWindow::updateListWidget()
             listItem->setText(QString("[Image %1x%2]").arg(img.width()).arg(img.height()));
         } else if (itemData.canConvert<QString>()) {
             QString fullText = itemData.value<QString>();
-            QString firstLine = fullText.split('\n').first().trimmed();
-            listItem->setText(firstLine);
+            QStringList lines = fullText.split('\n');
+            QString firstLine = lines.first().trimmed();
+            if (lines.size() <= 1) {
+                listItem->setText(firstLine);
+            } else {
+                listItem->setText(QString("%1   [+%2 more line%3]").arg(firstLine).arg(lines.size() - 1).arg(lines.size() > 2 ? "s" : ""));
+            }
         }
 
         listItem->setData(Qt::UserRole, itemData);
