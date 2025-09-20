@@ -161,6 +161,26 @@ void MainWindow::createTrayIcon()
 // ---------------------
 // Helpers
 // ---------------------
+void setTrimmedTooltip(QListWidgetItem* item, QString& text) {
+    static constexpr int tooltipMaxLines = 10;
+    const int lineCount = text.count('\n') + 1;
+    if (lineCount > tooltipMaxLines) {
+        int maxIndex = 0;
+        int line = 0;
+        for (; line<tooltipMaxLines; ++line) {
+            int index = text.indexOf('\n', maxIndex + 1);
+            if (index == -1) break;
+            maxIndex = index;
+        }
+
+        item->setToolTip(
+            QString("%1\n... [%2 more line%3]").arg(text.left(maxIndex)).arg(lineCount - line).arg(lineCount == tooltipMaxLines + 1 ? "" : "s")
+        );
+    } else {
+        item->setToolTip(text);
+    }
+}
+
 void MainWindow::updateListWidget()
 {
     listWidget->clear();
@@ -174,6 +194,7 @@ void MainWindow::updateListWidget()
             listItem->setText(QString("[Image %1x%2]").arg(img.width()).arg(img.height()));
         } else if (itemData.canConvert<QString>()) {
             QString fullText = itemData.value<QString>();
+            setTrimmedTooltip(listItem, fullText);
             QString firstLine = fullText.split('\n').first().trimmed();
             listItem->setText(firstLine);
         }
